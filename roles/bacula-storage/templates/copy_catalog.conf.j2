@@ -1,0 +1,13 @@
+# Backup the catalog database (after the nightly save)
+Job {
+  Name = "CopyCatalogTo{{ansible_hostname}}"
+  JobDefs = "DefaultJob"
+  Level = Full
+  Type = Copy
+  FileSet ="Catalog"
+  Pool = local_storage
+  Storage =  {{ansible_hostname}}  
+  Schedule = "WeeklyCycleAfterBackup"  
+  Write Bootstrap = "/var/lib/bacula/%n.bsr"
+  Priority = 11                   # run after main backup
+}

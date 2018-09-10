@@ -1,0 +1,10 @@
+#
+# Bacula User Agent (or Console) Configuration File
+#
+
+Director {
+  Name = {{ansible_hostname}}-dir
+  DIRport = 9101
+  address = {{ansible_default_ipv4.address}}
+  Password = "5-uSeQoiFQQRjVw_IsDFGHfZCWoYDut18"
+}

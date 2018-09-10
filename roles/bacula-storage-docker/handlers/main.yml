@@ -1,0 +1,10 @@
+---
+# handlers file for bacula-storage
+  - name: reload_bacula-sd_service
+    shell: docker exec {{ storage_container_name }} "./etc/bacula/scripts/reloadServiceHandler.sh"
+    run_once: true    
+    
+  - name: reload_bacula_dir
+    shell: docker exec {{ director_container_name }} "./etc/bacula/scripts/reloadConsoleHandler.sh"
+    run_once: true
+    delegate_to: "{{ director_address }}"

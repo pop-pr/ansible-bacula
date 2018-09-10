@@ -1,0 +1,16 @@
+Job {
+  Name = "Backup_{{ansible_hostname}}"
+  Client = {{ansible_hostname}}-fd
+  JobDefs = "{{job_defs}}_{{ansible_hostname}}"
+}
+
+Client {
+  Name = {{ansible_hostname}}-fd
+  Address = {{ansible_default_ipv4.address}}
+  FDPort =  9102
+  Catalog = MyCatalog  
+  Password = "{{ unique_password.stdout }}"
+  File Retention = 60 days
+  Job Retention = 6 months
+  AutoPrune = yes
+}

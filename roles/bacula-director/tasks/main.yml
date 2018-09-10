@@ -1,0 +1,43 @@
+---
+  - name: Installs bacula-director's packages
+    action: apt name={{item}} state=latest update_cache=yes
+    with_items:
+      - bacula-director-sqlite3
+      - bacula-fd
+      - bacula-sd
+      - bacula-console
+    tags: apt-bacula
+    notify: restart_bacula
+
+  - name: Creates director's definition sub-directories
+    file: dest=/etc/bacula/{{item}} state=directory owner=bacula group=bacula
+    with_items:
+      - clients
+      - file_sets   
+      - job_defs
+      - jobs
+      - messages
+      - pools
+      - schedules
+      - storages
+      - local_storage
+    tags: config
+
+  - name: Sends templates to configure bacula-director's machine
+    template: src={{item.src}} dest=/etc/bacula/{{item.dest}} owner=bacula group=bacula
+    with_items:
+      - {src : bacula-dir.conf.j2, dest : bacula-dir.conf}            
+      - {src : bacula-fd.conf.j2, dest : bacula-fd.conf}
+      - {src : bacula-sd.conf.j2, dest : bacula-sd.conf}
+      - {src : bconsole.conf.j2, dest : bconsole.conf}
+      - {src : director_client.conf.j2, dest : clients/director.conf}
+      - {src : director_storage.conf.j2, dest : storages/director.conf}
+      - {src : file_sets.conf, dest : file_sets/file_sets.conf}
+      - {src : job_defs.conf.j2, dest : job_defs/job_defs.conf}
+      - {src : jobs.conf.j2, dest : jobs/jobs.conf}
+      - {src : messages.conf, dest : messages/messages.conf}
+      - {src : pools.conf, dest : pools/pools.conf}
+      - {src : schedules.conf, dest : schedules/schedules.conf}
+    notify:
+      - restart_bacula
+    tags: config

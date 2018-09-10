@@ -1,0 +1,43 @@
+---
+# tasks file for bacula-web
+  - name: Installs needed packages
+    action: apt name={{item}} state=present update_cache=yes
+    with_items:
+      - apache2
+      - libapache2-mod-php
+      - php-sqlite3
+      - php-gd
+    tags: apt
+
+  - stat:
+      path: /var/www/html/bacula-web
+    register: baculaweb_folder
+    tags: config
+
+  - name: Creates web-bacula directory in var/www/html
+    file: dest=/var/www/html/bacula-web state=directory owner=www-data group=www-data
+    tags: config
+
+  - name: Sends bacula-web-tar and decompress it
+    unarchive: src=bacula-web.tgz dest=/var/www/html/bacula-web
+    when: baculaweb_folder.stat.exists == false
+    tags: config
+
+  - name: Copies config files to remote host
+    copy: src={{item.name}} dest={{item.dest}}
+    with_items:
+      - {name: 000-default.conf, dest: /etc/apache2/sites-available/000-default.conf}
+      - {name: config.php, dest: /var/www/html/bacula-web/application/config/config.php}
+      - {name: php.ini, dest: /etc/php/7.0/apache2/php.ini}
+    tags: config
+    notify: restart_apache
+
+  - name: Changes folder and files ownership recursively
+    file: path=/var/www/html/bacula-web state=directory owner=www-data group=www-data mode="u+rwx,g+rx,o+rx" follow=yes recurse=yes
+    tags: config
+    notify: restart_apache
+
+  - name: Changes bacula-db group ownership
+    file: dest=/var/lib/bacula state=directory group=www-data recurse=yes
+    tags: config
+

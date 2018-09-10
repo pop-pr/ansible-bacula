@@ -1,0 +1,7 @@
+---
+# vars file for bacula-client
+director_address: srv-docker01
+director_name: director
+job_defs: "BackUp"
+director_container_name: bacula_director
+docker_data: /mnt/docker_data/bacula/director/data

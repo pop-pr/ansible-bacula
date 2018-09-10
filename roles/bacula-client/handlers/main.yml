@@ -1,0 +1,9 @@
+---
+# handlers file for bacula-client
+  - name: restart_bacula_fd
+    service: name=bacula-fd state=restarted 
+
+  - name: reload_bacula_dir
+    shell: docker exec {{ director_container_name }} "./etc/bacula/scripts/reloadConsoleHandler.sh"
+    run_once: true
+    delegate_to: "{{ director_address }}"

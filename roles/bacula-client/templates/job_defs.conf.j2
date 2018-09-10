@@ -1,0 +1,14 @@
+JobDefs {
+  Name = "BackUp_{{ansible_hostname}}"
+  Type = Backup
+  Level = Incremental
+  Client = director-fd
+  FileSet = "Standard Set"
+  Schedule = "WeeklyCycle"
+  Storage = baculasd
+  Messages = Standard
+  Pool = {{ansible_hostname}}_pool
+  SpoolAttributes = yes
+  Priority = 10
+  Write Bootstrap = "/var/lib/bacula/%c.bsr"
+}

@@ -1,0 +1,7 @@
+---
+# vars file for bacula-storage
+director_address: srv-docker01
+director_name: director
+archive_device: /storage/bacula/
+docker_data: /mnt/docker_data/bacula/director/data
+director_container_name: bacula_director

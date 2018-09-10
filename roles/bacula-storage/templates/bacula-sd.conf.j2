@@ -1,0 +1,34 @@
+Storage {                             # definition of myself
+  Name = {{ansible_hostname}}-sd
+  WorkingDirectory = "/var/lib/bacula"
+  Pid Directory = "/var/run/bacula"
+  Maximum Concurrent Jobs = 20
+  SDAddress = {{ansible_default_ipv4.address}}
+  SDPort = 9103
+}
+
+# List Directors who are permitted to contact Storage daemon
+
+Director {
+  Name = {{director_name}}-dir
+  Password = "{{unique_password.stdout}}"
+  Monitor = no
+}
+
+Device {
+  Name = {{ansible_hostname}}
+  Media Type = File
+  Device Type = File
+  Archive Device = {{archive_device}}
+  LabelMedia = yes;                   # lets Bacula label unlabeled media
+  Random Access = Yes;
+  AutomaticMount = yes;               # when device opened, read it
+  RemovableMedia = no;
+  AlwaysOpen = Yes;
+  Maximum Concurrent Jobs = 5
+}
+
+Messages {
+  Name = Standard
+  director = {{ansible_hostname}}-dir = all
+}

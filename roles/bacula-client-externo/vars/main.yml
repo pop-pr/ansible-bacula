@@ -1,0 +1,5 @@
+---
+# vars file for bacula-client
+director_address: director
+director_name: director
+job_defs: BackUpExterno

@@ -1,0 +1,14 @@
+---
+# handlers file for bacula-client
+  - name: restart_bacula_fd
+    service: name=bacula-fd state=restarted
+  - name: restart_bacula_director
+    service: name={{item}} state=restarted
+    with_items:
+      - bacula-sd
+      - bacula-fd
+
+  - name: reload_bacula_dir
+    shell: "echo reload | bconsole"
+    run_once: true
+    delegate_to: "{{ director_address }}"

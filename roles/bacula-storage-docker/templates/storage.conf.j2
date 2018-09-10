@@ -1,0 +1,10 @@
+Storage {
+  Name = {{ansible_hostname}}
+  Address = {{ansible_host}}
+  SDPort = 9103
+  # Esse PWD tem que bater com o password setado no bacula.sd.conf, no campo password do diretor.
+  Password = "{{unique_password.stdout}}"
+  Device = {{ansible_hostname}}
+  Media Type = File
+  Maximum Concurrent Jobs = 10        # run up to 10 jobs a the same time
+}

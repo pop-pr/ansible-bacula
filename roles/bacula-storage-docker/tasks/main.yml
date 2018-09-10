@@ -1,0 +1,51 @@
+---
+# tasks file for bacula-client  
+
+  - stat:
+      path: "{{storage_docker_data}}/passwords"
+    register: pwd_file
+    tags: password,config
+
+  - name: Creates password's file
+    file: path={{storage_docker_data}}/passwords state=touch group=root owner=root
+    when: pwd_file.stat.exists == false
+    tags: password
+
+  - name: Generates a random password
+    shell: "head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13 ; echo ''"
+    register: unique_password
+    when: pwd_file.stat.exists == false
+    tags: password,config
+
+  - name: Writes the generated password in {{storage_docker_data}}/passwords
+    shell: "echo {{unique_password.stdout}} >> {{storage_docker_data}}/passwords"
+    when: pwd_file.stat.exists == false
+    tags: config
+
+  - name: Reads {{storage_docker_data}}/passwords content
+    shell: "cat {{storage_docker_data}}/passwords"
+    register: unique_password
+    tags: config
+
+  - name: create_device_archive_directory    
+    shell: docker exec {{ storage_container_name }} ./etc/bacula/scripts/archiveDeviceHandler.sh {{ archive_device }}
+    tags: config
+
+  - name: Sends conf templates
+    template: src="{{item.src}}" dest="{{item.dest}}"
+    tags: config
+    loop:
+      - {src: bacula-sd.conf.j2, dest: "{{storage_docker_data}}/bacula-sd.conf" }      
+    notify: 
+      - reload_bacula-sd_service            
+
+  - name: Sends conf templates to Director's machine.
+    template: src="{{item.src}}" dest="{{item.dest}}" 
+    loop:
+      - {src : storage.conf.j2, dest : "{{director_docker_data}}/storages/{{ansible_hostname}}.conf" }      
+      - {src : job_defs.conf.j2, dest : "{{director_docker_data}}/job_defs/{{ansible_hostname}}_job.conf"}
+      - {src : pools.conf.j2, dest : "{{director_docker_data}}/pools/{{ansible_hostname}}_pool.conf"}     
+    delegate_to: "{{ director_address }}"
+    tags: config
+    notify: 
+      - reload_bacula_dir            
