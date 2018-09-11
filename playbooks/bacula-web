@@ -1,8 +1,0 @@
----
-- hosts: srv
-  gather_facts: yes
-  become: yes
-  become_method: sudo
-  roles:
-    - bacula-web
-
