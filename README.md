@@ -1,13 +1,13 @@
 # ansible-bacula
-Configure dinamicamente instâncias do bacula (Clientes, Storages e Diretores) utilizando o Ansible.
+Configure dinamicamente instâncias do bacula (Clientes, Storages e Diretores) utilizando o [Ansible](https://www.ansible.com/ "Ansible Project").
 
 
-You can read this document in english [here](link "Read me!").
+You can read this document in english [here](https://github.com/PoP-PR/ansible-bacula/blob/master/README-en.md "Read me!").
 ## Introdução 
 O Objetivo deste projeto é utilizar o Ansible para automatizar o processo de instalação, configuração e comunicação entre daemons do Bacula. 
 
 
-Este projeto está intrinsecamente relacionado com o projeto [Bacula as a micro-service](link2 "Bacula on Dockerhub"), fornecido pelo PoP-PR e baseia-se nas configurações deste projeto para realizar as automações.
+Este projeto está intrinsecamente relacionado com o projeto [Bacula as a micro-service](https://hub.docker.com/r/popprrnp/bacula-dir/ "Bacula on Dockerhub"), fornecido pelo PoP-PR e baseia-se nas configurações deste projeto para realizar as automações.
 ## O que posso fazer com este projeto?
 - Configurar novos Diretores.
 - Configurar Storages e comunica-los com os diretores.
